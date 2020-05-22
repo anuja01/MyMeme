@@ -14,8 +14,12 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
+  Image,
 } from 'react-native';
-
+import YouTube from 'react-native-youtube';
+import ViewShot from 'react-native-view-shot';
+import { API_KEY } from "./constants";
 import {
   Header,
   LearnMoreLinks,
@@ -24,53 +28,72 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return (
+      <>
+        <StatusBar barStyle="dark-content" />
+        <SafeAreaView>
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            style={styles.scrollView}>
+            <View style={styles.body}>
+              <ViewShot ref="viewShot" options={{format: 'jpg', quality: 1}}>
+                <YouTube
+                  apiKey={API_KEY}
+                  videoId="Ss2WS8fWeZ0"
+                  play
+                  // onReady={e => this.setState({isReady: true})}
+                  // onChangeState={e => this.setState({status: e.state})}
+                  // onChangeQuality={e => this.setState({quality: e.quality})}
+                  // onError={e => this.setState({error: e.error})}
+                  style={{alignSelf: 'stretch', height: 300}}
+                />
+              </ViewShot>
+
+              <View
+                style={{
+                  width: 400,
+                  height: 400,
+                  backgroundColor: 'gray',
+                  marginLeft: 10,
+                  marginTop: 10,
+                }}>
+                {this.state.uri && (
+                  <Image
+                    style={{width: 400, height: 400}}
+                    source={{uri: this.state.uri}}
+                  />
+                )}
+              </View>
+              <View>
+                <Button
+                  title="snap"
+                  onPress={() => {
+                    this.refs.viewShot.capture().then(uri => {
+                      console.log('do something with ', uri);
+                      this.setState({uri: uri});
+                    });
+                  }}
+                />
+                <Button
+                  title="clear"
+                  onPress={() => {
+                    this.setState({uri: undefined});
+                  }}
+                />
+              </View>
             </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+          </ScrollView>
+        </SafeAreaView>
+      </>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   scrollView: {
