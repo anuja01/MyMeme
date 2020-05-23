@@ -14,12 +14,11 @@ import {
   View,
   Text,
   StatusBar,
-  Button,
   Image,
 } from 'react-native';
 import YouTube from 'react-native-youtube';
 import ViewShot from 'react-native-view-shot';
-import { API_KEY } from "./constants";
+import {API_KEY} from './constants';
 import {
   Header,
   LearnMoreLinks,
@@ -27,7 +26,7 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+import {Button} from 'react-native-elements';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -45,7 +44,7 @@ class App extends React.Component {
               <ViewShot ref="viewShot" options={{format: 'jpg', quality: 1}}>
                 <YouTube
                   apiKey={API_KEY}
-                  videoId="Ss2WS8fWeZ0"
+                  videoId="8mMPqbqmTg8"
                   play
                   // onReady={e => this.setState({isReady: true})}
                   // onChangeState={e => this.setState({status: e.state})}
@@ -70,9 +69,20 @@ class App extends React.Component {
                   />
                 )}
               </View>
-              <View>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }}>
                 <Button
-                  title="snap"
+                  title="Clear"
+                  onPress={() => {
+                    this.setState({uri: undefined});
+                  }}
+                />
+                <Button
+                  title="Snap"
                   onPress={() => {
                     this.refs.viewShot.capture().then(uri => {
                       console.log('do something with ', uri);
@@ -81,7 +91,7 @@ class App extends React.Component {
                   }}
                 />
                 <Button
-                  title="clear"
+                  title="Next"
                   onPress={() => {
                     this.setState({uri: undefined});
                   }}
